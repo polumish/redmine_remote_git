@@ -21,6 +21,7 @@ class RemoteGitServiceTest < ActiveSupport::TestCase
            'git', '-C', work, 'commit', '-q', '-m', 'init')
     system('git', '-C', work, 'push', '-q', 'origin', 'HEAD:refs/heads/main')
     RedmineRemoteGit.settings[:mirror_root] = @tmp
+    RedmineRemoteGit.settings[:git_allow_protocol] = 'https:ssh:file'
   end
 
   def teardown; FileUtils.remove_entry(@tmp); end

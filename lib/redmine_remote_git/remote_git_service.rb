@@ -45,7 +45,8 @@ module RedmineRemoteGit
     private
 
     def run_git(*args)
-      env = { 'GIT_ALLOW_PROTOCOL' => 'https:ssh:file', 'GIT_TERMINAL_PROMPT' => '0' }
+      proto = RedmineRemoteGit.settings[:git_allow_protocol].presence || 'https:ssh'
+      env = { 'GIT_ALLOW_PROTOCOL' => proto, 'GIT_TERMINAL_PROMPT' => '0' }
       env.merge!(askpass_env) if @source.auth_type == 'https_token' && @source.has_credential?
       out, err, st = Open3.capture3(env, 'git', *args)
       unless st.success?
