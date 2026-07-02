@@ -1,0 +1,14 @@
+api.array :git_repos do
+  @repos.each do |repo|
+    s = repo.remote_git_source
+    api.git_repo do
+      api.id repo.id
+      api.identifier repo.identifier
+      api.source_url s&.source_url
+      api.auth_type s&.auth_type
+      api.has_credential (s&.has_credential? || false)
+      api.last_fetch_at s&.last_fetch_at
+      api.last_error s&.last_error
+    end
+  end
+end
