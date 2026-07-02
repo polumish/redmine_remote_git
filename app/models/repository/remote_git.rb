@@ -1,7 +1,7 @@
 class Repository::RemoteGit < Repository::Git
   has_one :remote_git_source, foreign_key: :repository_id, dependent: :destroy
 
-  after_destroy :remove_mirror
+  before_destroy :remove_mirror, prepend: true
 
   def self.scm_name
     'RemoteGit'
