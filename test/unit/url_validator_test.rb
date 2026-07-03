@@ -4,8 +4,8 @@ class UrlValidatorTest < ActiveSupport::TestCase
   V = RedmineRemoteGit::UrlValidator
 
   def test_accepts_ssh_and_https
-    assert_equal 'ssh://git@git.half.net.ua:5022/redmine/remote-git.git',
-      V.normalize('ssh://git@git.half.net.ua:5022/redmine/remote-git.git')
+    assert_equal 'ssh://git@git.example.com:5022/group/repo.git',
+      V.normalize('ssh://git@git.example.com:5022/group/repo.git')
     assert_equal 'https://github.com/dergachev/redmine_git_remote.git',
       V.normalize('https://github.com/dergachev/redmine_git_remote.git')
   end
@@ -50,16 +50,16 @@ class UrlValidatorTest < ActiveSupport::TestCase
 
   def test_accepts_bare_user_at_host
     # bare git@ (no colon = no password) must still be accepted by the URI branch
-    assert_equal 'ssh://git@git.half.net.ua:5022/redmine/remote-git.git',
-      V.normalize('ssh://git@git.half.net.ua:5022/redmine/remote-git.git')
+    assert_equal 'ssh://git@git.example.com:5022/group/repo.git',
+      V.normalize('ssh://git@git.example.com:5022/group/repo.git')
     assert_equal 'https://github.com/dergachev/redmine_git_remote.git',
       V.normalize('https://github.com/dergachev/redmine_git_remote.git')
   end
 
   def test_parts
-    p = V.parts('ssh://git@git.half.net.ua:5022/redmine/remote-git.git')
-    assert_equal 'git.half.net.ua', p[:host]
-    assert_equal 'redmine',         p[:group]
-    assert_equal 'remote-git',      p[:repo]
+    p = V.parts('ssh://git@git.example.com:5022/group/repo.git')
+    assert_equal 'git.example.com', p[:host]
+    assert_equal 'group',           p[:group]
+    assert_equal 'repo',            p[:repo]
   end
 end

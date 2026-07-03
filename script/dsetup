@@ -2,7 +2,7 @@
 # Build the Redmine 6.1 test image and (re)create the bind-mounted container.
 # Idempotent: safe to re-run.
 set -euo pipefail
-REPO="/Volumes/DATA/GIT/redmine_remote_git"
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 IMAGE="redmine-remote-git-test"
 CONTAINER="remote-git-test"
 
