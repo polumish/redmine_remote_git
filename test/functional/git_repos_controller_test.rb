@@ -15,12 +15,6 @@ class GitReposControllerTest < Redmine::ApiTest::Base
     @key = User.find(1).api_key
     @mirror_root = Dir.mktmpdir
     RedmineRemoteGit.settings[:mirror_root] = @mirror_root
-    # Register .rbuilder as an alias for Redmine's rsb API template handler if not already done.
-    unless ActionView::Template.template_handler_extensions.include?('rbuilder')
-      ActionView::Template.register_template_handler(
-        :rbuilder, ActionView::Template.registered_template_handler(:rsb)
-      )
-    end
   end
 
   def teardown
