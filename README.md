@@ -46,4 +46,5 @@ Redmine 6.0+ (tested on 6.1.2), Ruby 3.3, Rails 7.2, and `git` on the server.
 
 ## License
 
-GPL v2 (same as Redmine).
+Licensed under the GNU General Public License v2 — the same license as Redmine.
+See [LICENSE](LICENSE). Copyright (C) 2026 polumish.
