@@ -15,25 +15,30 @@ h2 .icon-remote-git {
   background-size: 16px 16px;
 }
 
-/* Let the active theme style the .box card and the .list tables (same look as My page).
-   We only add plugin-specific bits below. */
-.box.remote-git-overview h3 .count { color: #888; font-weight: normal; }
+h2 .count, .box.remote-git-overview h3 .count {
+  color: #888; font-weight: normal; font-size: 0.85em;
+}
 
-table.remote-git-repos td span.active   { color: #189d0e; }
-table.remote-git-repos td span.archived { color: #999; }
+/* Two side-by-side boxes when there are many repositories; wraps to one column
+   automatically when the page is not wide enough. */
+.remote-git-columns { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; }
+.remote-git-columns > .box { flex: 1 1 460px; margin-top: 0; }
+
+table.remote-git-sortable td span.active   { color: #189d0e; }
+table.remote-git-sortable td span.archived { color: #999; }
 
 /* Keep the theme's .box card, but override its centered, stretched-to-full-width
-   table: left-align every cell and shrink columns to their content for readability. */
-table.remote-git-repos,
+   tables: left-align every cell and shrink columns to their content for readability. */
+table.remote-git-sortable,
 table.remote-git-changes { width: auto !important; }
-table.remote-git-repos th,  table.remote-git-repos td,
+table.remote-git-sortable th, table.remote-git-sortable td,
 table.remote-git-changes th, table.remote-git-changes td {
   text-align: left !important;
   padding: 3px 18px 3px 6px;
   white-space: nowrap;
   vertical-align: top;
 }
-table.remote-git-repos td:last-child,
+table.remote-git-sortable td:last-child,
 table.remote-git-changes td:last-child { white-space: normal; }
 
 input.remote-git-filter { padding: 3px 6px; min-width: 260px; }

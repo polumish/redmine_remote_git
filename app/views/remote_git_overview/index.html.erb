@@ -3,35 +3,50 @@
   <%= javascript_include_tag 'remote_git', plugin: 'redmine_remote_git' %>
 <% end %>
 
-<h2><span class="icon-remote-git"></span> <%= l(:label_remote_git_overview) %></h2>
+<h2>
+  <span class="icon-remote-git"></span> <%= l(:label_remote_git_overview) %>
+  <span class="count">(<%= @active_repositories.size %>)</span>
+</h2>
 
 <% if @repositories.empty? %>
   <div class="box"><p class="nodata"><%= l(:label_no_data) %></p></div>
 <% else %>
-  <div class="box remote-git-overview">
-    <h3>
-      <%= l(:label_remote_git_overview) %>
-      <span class="count">(<%= @active_repositories.size %>)</span>
-    </h3>
-    <p>
-      <input type="text" id="remote-git-filter" class="remote-git-filter"
-             placeholder="<%= l(:label_remote_git_filter) %>" autocomplete="off" />
-    </p>
-    <%= render partial: 'repo_table',
-               locals: { repos: @active_repositories, table_class: 'remote-git-repos' } %>
+  <p>
+    <input type="text" id="remote-git-filter" class="remote-git-filter"
+           placeholder="<%= l(:label_remote_git_filter) %>" autocomplete="off" />
+  </p>
 
-    <% if @archived_repositories.any? %>
-      <p>
-        <a href="#" id="remote-git-archived-toggle" class="icon icon-collapsed">
-          <%= l(:label_remote_git_archived, count: @archived_repositories.size) %>
-        </a>
-      </p>
-      <div id="remote-git-archived" style="display:none;">
+  <%
+    two_col = @active_repositories.size > 20
+    if two_col
+      half = (@active_repositories.size / 2.0).ceil
+      chunks = [@active_repositories[0...half], @active_repositories[half..] || []]
+    else
+      chunks = [@active_repositories]
+    end
+  %>
+  <div class="remote-git-columns">
+    <% chunks.each do |part| %>
+      <div class="box remote-git-overview">
         <%= render partial: 'repo_table',
-                   locals: { repos: @archived_repositories, table_class: 'remote-git-archived' } %>
+                   locals: { repos: part, table_class: 'remote-git-repos' } %>
       </div>
     <% end %>
   </div>
+
+  <% if @archived_repositories.any? %>
+    <p>
+      <a href="#" id="remote-git-archived-toggle" class="icon icon-collapsed">
+        <%= l(:label_remote_git_archived, count: @archived_repositories.size) %>
+      </a>
+    </p>
+    <div id="remote-git-archived" style="display:none;">
+      <div class="box remote-git-overview">
+        <%= render partial: 'repo_table',
+                   locals: { repos: @archived_repositories, table_class: 'remote-git-archived' } %>
+      </div>
+    </div>
+  <% end %>
 
   <div class="box remote-git-overview">
     <h3><%= l(:label_remote_git_recent_changes) %></h3>
