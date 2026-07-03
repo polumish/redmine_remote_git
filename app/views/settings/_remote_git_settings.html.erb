@@ -1,0 +1,31 @@
+<% @settings ||= {} %>
+<div class="box tabular settings">
+  <p>
+    <label><%= l(:label_remote_git_menu_visibility) %></label>
+    <%= select_tag 'settings[menu_visibility]',
+          options_for_select([
+            [l(:label_remote_git_vis_everyone), 'everyone'],
+            [l(:label_remote_git_vis_admins),   'admins'],
+            [l(:label_remote_git_vis_selected), 'selected']
+          ], (@settings['menu_visibility'] || 'everyone')) %>
+    <em class="info"><%= l(:label_remote_git_vis_hint) %></em>
+  </p>
+
+  <p>
+    <label><%= l(:label_group_plural) %></label>
+    <%= hidden_field_tag 'settings[menu_group_ids][]', '' %>
+    <%= select_tag 'settings[menu_group_ids][]',
+          options_from_collection_for_select(Group.givable.sorted, :id, :name,
+            Array(@settings['menu_group_ids']).map(&:to_i)),
+          multiple: true, size: 6 %>
+  </p>
+
+  <p>
+    <label><%= l(:label_user_plural) %></label>
+    <%= hidden_field_tag 'settings[menu_user_ids][]', '' %>
+    <%= select_tag 'settings[menu_user_ids][]',
+          options_from_collection_for_select(User.active.sorted, :id, :name,
+            Array(@settings['menu_user_ids']).map(&:to_i)),
+          multiple: true, size: 8 %>
+  </p>
+</div>

@@ -1,52 +1,36 @@
 <% content_for :header_tags do %>
   <%= stylesheet_link_tag 'remote_git', plugin: 'redmine_remote_git' %>
+  <%= javascript_include_tag 'remote_git', plugin: 'redmine_remote_git' %>
 <% end %>
 
 <h2><span class="icon-remote-git"></span> <%= l(:label_remote_git_overview) %></h2>
 
 <p class="subtitle">
-  <%= l(:label_remote_git_overview_summary,
-        count: @repositories.size,
-        active: @repositories.count { |r| r.project.active? }) %>
+  <%= l(:label_remote_git_overview_summary, count: @repositories.size, active: @active_repositories.size) %>
 </p>
 
 <% if @repositories.empty? %>
   <p class="nodata"><%= l(:label_no_data) %></p>
 <% else %>
-  <table class="list remote-git-repos">
-    <thead>
-      <tr>
-        <th><%= l(:label_repository) %></th>
-        <th><%= l(:label_project) %></th>
-        <th><%= l(:field_status) %></th>
-        <th><%= l(:label_revision_plural) %></th>
-        <th><%= l(:label_remote_git_last_change) %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @repositories.each do |repo| %>
-        <% proj = repo.project %>
-        <% last = @last_dates[repo.id] %>
-        <tr class="<%= cycle('odd', 'even') %>">
-          <td>
-            <%= link_to repo.identifier,
-                  url_for(controller: 'repositories', action: 'show', id: proj,
-                          repository_id: repo.identifier, only_path: true) %>
-          </td>
-          <td><%= link_to_project proj %></td>
-          <td>
-            <% if proj.active? %><span class="active"><%= l(:label_remote_git_status_active) %></span>
-            <% elsif proj.archived? %><span class="archived"><%= l(:label_remote_git_status_archived) %></span>
-            <% else %><%= l(:label_remote_git_status_closed) %><% end %>
-          </td>
-          <td><%= @counts[repo.id] || 0 %></td>
-          <td>
-            <% if last %><%= format_time(last) %><% else %>&mdash;<% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <p>
+    <input type="text" id="remote-git-filter" class="remote-git-filter"
+           placeholder="<%= l(:label_remote_git_filter) %>" autocomplete="off" />
+  </p>
+
+  <%= render partial: 'repo_table',
+             locals: { repos: @active_repositories, table_class: 'remote-git-repos' } %>
+
+  <% if @archived_repositories.any? %>
+    <p>
+      <a href="#" id="remote-git-archived-toggle" class="icon icon-collapsed">
+        <%= l(:label_remote_git_archived, count: @archived_repositories.size) %>
+      </a>
+    </p>
+    <div id="remote-git-archived" style="display:none;">
+      <%= render partial: 'repo_table',
+                 locals: { repos: @archived_repositories, table_class: 'remote-git-archived' } %>
+    </div>
+  <% end %>
 
   <h3><%= l(:label_remote_git_recent_changes) %></h3>
   <table class="list remote-git-changes">
@@ -61,7 +45,7 @@
     <tbody>
       <% @recent_changesets.each do |cs| %>
         <% repo = cs.repository; proj = repo.project %>
-        <tr class="<%= cycle('odd', 'even') %>">
+        <tr>
           <td><%= format_time(cs.committed_on) %></td>
           <td>
             <%= link_to repo.identifier,

@@ -1,5 +1,6 @@
 class RemoteGitOverviewController < ApplicationController
   before_action :require_login
+  before_action :authorize_menu
 
   # Consolidated, cross-project overview of every RemoteGit repository the current
   # user is allowed to browse, plus the most recent changesets across them.
@@ -17,10 +18,18 @@ class RemoteGitOverviewController < ApplicationController
     @counts      = Changeset.where(repository_id: repo_ids).group(:repository_id).count
     @repositories.sort_by! { |r| @last_dates[r.id] || Time.at(0) }
     @repositories.reverse!
+    @active_repositories   = @repositories.select { |r| r.project.active? }
+    @archived_repositories = @repositories.reject { |r| r.project.active? }
 
     @recent_changesets = Changeset.where(repository_id: repo_ids)
                                   .includes(repository: :project)
                                   .order(committed_on: :desc)
                                   .limit(30)
+  end
+
+  private
+
+  def authorize_menu
+    render_403 unless RedmineRemoteGit.menu_visible?(User.current)
   end
 end

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 — 2026-07-03
+
+- Overview page: text filter/search, click-to-sort columns, and a separate
+  collapsible section for repositories in archived projects.
+- Plugin settings to control who sees the Git top-menu entry: everyone logged in,
+  administrators only, or selected groups and/or users (admins always see it).
+  The overview controller enforces the same visibility.
+
 ## 0.2.0 — 2026-07-03
 
 - Add a global **Git** top-menu entry (with a git icon) linking to a consolidated,
