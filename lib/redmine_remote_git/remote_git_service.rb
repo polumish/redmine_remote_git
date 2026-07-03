@@ -1,4 +1,4 @@
-require 'open3'; require 'fileutils'; require 'shellwords'; require 'tempfile'
+require 'open3'; require 'fileutils'; require 'tempfile'
 
 module RedmineRemoteGit
   def self.settings

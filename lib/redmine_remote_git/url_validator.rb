@@ -7,7 +7,7 @@ module RedmineRemoteGit
     SCP = %r{\A(?<user>[a-z0-9._-]+)@(?<host>[a-z0-9.-]+):(?<path>[A-Za-z0-9._/-]+)\z}i
     HOST = /\A[a-z0-9.-]+\z/i
     PATH = %r{\A/[A-Za-z0-9._/-]+\z}
-    META = /[\s;&|`$<>()\\'"]|--/  # shell metachars or option-injection
+    META = /[\s;&|`$<>()\\'"]|--|\.\./  # shell metachars, option-injection, or path escape
 
     def self.normalize(url)
       raise InvalidUrl, 'blank' if url.nil? || url.strip.empty?
@@ -26,6 +26,7 @@ module RedmineRemoteGit
       end
       raise InvalidUrl, "bad host: #{uri.host}" unless uri.host.to_s =~ HOST
       raise InvalidUrl, "bad path: #{uri.path}" unless uri.path.to_s =~ PATH
+      raise InvalidUrl, 'credentials in URL not allowed' if uri.userinfo.to_s.include?(':')
       url
     end
 
