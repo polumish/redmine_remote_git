@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 — 2026-07-03
+
+- Add a global **Git** top-menu entry (with a git icon) linking to a consolidated,
+  cross-project overview of every RemoteGit repository the current user may browse:
+  repository, project, project status, changeset count, last change, plus a
+  "recent changes" list of the latest changesets across all repositories.
+  Visibility respects `browse_repository` permission per project.
+
 ## 0.1.0 — 2026-07-03
 
 Initial release.
