@@ -13,6 +13,11 @@ class EndToEndTest < ActiveSupport::TestCase
     Setting.enabled_scm = (Setting.enabled_scm + ['RemoteGit']).uniq
   end
 
+  def teardown
+    RedmineRemoteGit.settings.delete(:git_allow_protocol)
+    RedmineRemoteGit.settings.delete(:mirror_root)
+  end
+
   def test_create_fetch_delete_roundtrip
     tmp = Dir.mktmpdir
     remote = File.join(tmp, 'o.git'); system('git', 'init', '-q', '--bare', remote)
@@ -21,7 +26,7 @@ class EndToEndTest < ActiveSupport::TestCase
     system({ 'GIT_AUTHOR_NAME' => 't', 'GIT_AUTHOR_EMAIL' => 't@t',
              'GIT_COMMITTER_NAME' => 't', 'GIT_COMMITTER_EMAIL' => 't@t' },
            'git', '-C', w, 'commit', '-q', '-m', 'i')
-    system('git', '-C', w, 'push', '-q', 'origin', 'HEAD:refs/heads/main')
+    assert system('git', '-C', w, 'push', '-q', 'origin', 'HEAD:refs/heads/main'), 'fixture push failed'
 
     RedmineRemoteGit.settings[:mirror_root] = tmp
     RedmineRemoteGit.settings[:git_allow_protocol] = 'https:ssh:file'

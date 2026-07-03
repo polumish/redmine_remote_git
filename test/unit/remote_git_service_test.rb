@@ -24,7 +24,11 @@ class RemoteGitServiceTest < ActiveSupport::TestCase
     RedmineRemoteGit.settings[:git_allow_protocol] = 'https:ssh:file'
   end
 
-  def teardown; FileUtils.remove_entry(@tmp); end
+  def teardown
+    FileUtils.remove_entry(@tmp)
+    RedmineRemoteGit.settings.delete(:git_allow_protocol)
+    RedmineRemoteGit.settings.delete(:mirror_root)
+  end
 
   def test_clone_creates_bare_mirror
     # allow file:// only in test by stubbing validator normalize
