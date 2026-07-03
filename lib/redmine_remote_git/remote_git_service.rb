@@ -1,9 +1,11 @@
 require 'open3'; require 'fileutils'; require 'shellwords'; require 'tempfile'
 
 module RedmineRemoteGit
-  @settings = {}
   def self.settings
-    @settings
+    @settings ||= begin
+      stored = (defined?(Setting) && Setting.respond_to?(:plugin_redmine_remote_git) ? Setting.plugin_redmine_remote_git : nil)
+      (stored || {}).to_hash.with_indifferent_access
+    end
   end
 
   class RemoteGitService
