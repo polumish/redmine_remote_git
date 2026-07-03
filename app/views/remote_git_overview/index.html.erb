@@ -19,7 +19,7 @@
         <th><%= l(:label_repository) %></th>
         <th><%= l(:label_project) %></th>
         <th><%= l(:field_status) %></th>
-        <th class="center"><%= l(:label_revision_plural) %></th>
+        <th><%= l(:label_revision_plural) %></th>
         <th><%= l(:label_remote_git_last_change) %></th>
       </tr>
     </thead>
@@ -39,7 +39,7 @@
             <% elsif proj.archived? %><span class="archived"><%= l(:label_remote_git_status_archived) %></span>
             <% else %><%= l(:label_remote_git_status_closed) %><% end %>
           </td>
-          <td class="center"><%= @counts[repo.id] || 0 %></td>
+          <td><%= @counts[repo.id] || 0 %></td>
           <td>
             <% if last %><%= format_time(last) %><% else %>&mdash;<% end %>
           </td>
@@ -49,7 +49,7 @@
   </table>
 
   <h3><%= l(:label_remote_git_recent_changes) %></h3>
-  <table class="list changesets">
+  <table class="list remote-git-changes">
     <thead>
       <tr>
         <th><%= l(:label_date) %></th>
