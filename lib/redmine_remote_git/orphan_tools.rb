@@ -7,6 +7,7 @@ module RedmineRemoteGit
       rest = segs[1..]
       port = (rest.first =~ /\A\d+\z/) ? rest.shift : nil
       group = rest[0]; repo = rest[1]
+      raise ArgumentError, "unrecoverable orphan path: #{path}" if group.nil? || group.empty? || repo.nil? || repo.empty?
       hostport = port ? "#{host}:#{port}" : host
       "ssh://git@#{hostport}/#{group}/#{repo}.git"
     end
