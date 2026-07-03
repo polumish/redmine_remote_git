@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Build the Redmine 6.1 test image and (re)create the bind-mounted container.
+# Idempotent: safe to re-run.
+set -euo pipefail
+REPO="/Volumes/DATA/GIT/redmine_remote_git"
+IMAGE="redmine-remote-git-test"
+CONTAINER="remote-git-test"
+
+docker build -t "$IMAGE" "$REPO/test/docker"
+
+docker rm -f "$CONTAINER" 2>/dev/null || true
+docker run -d --name "$CONTAINER" \
+  -v "$REPO:/redmine/plugins/redmine_remote_git" \
+  "$IMAGE"
+
+docker exec "$CONTAINER" bash -lc \
+  "cd /redmine && RAILS_ENV=test bin/rails redmine:plugins:migrate NAME=redmine_remote_git"
+echo "Harness ready: container '$CONTAINER' is up with the plugin mounted."

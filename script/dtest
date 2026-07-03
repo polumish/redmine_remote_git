@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Run the plugin test suite (or one file) inside the test container.
+# Usage:
+#   script/dtest                                       # whole plugin suite
+#   script/dtest test/unit/foo_test.rb                 # plugin-relative path
+#   script/dtest -e "puts 'hello'"                     # runner expression
+set -euo pipefail
+CONTAINER="remote-git-test"
+docker start "$CONTAINER" >/dev/null 2>&1 || { echo "Run script/dsetup first"; exit 1; }
+
+# Keep stderr so a failing migration surfaces instead of silently leaving a stale schema.
+docker exec "$CONTAINER" bash -lc \
+  "cd /redmine && RAILS_ENV=test bin/rails redmine:plugins:migrate NAME=redmine_remote_git >/dev/null"
+
+if [ "${1:-}" = "-e" ]; then
+  docker exec "$CONTAINER" bash -lc \
+    "cd /redmine && RAILS_ENV=test bin/rails runner \"$2\""
+elif [ -n "${1:-}" ]; then
+  TEST_PATH="$1"
+  # Prefix plugin-relative paths so Rails can find them
+  if [[ "$TEST_PATH" != plugins/* ]]; then
+    TEST_PATH="plugins/redmine_remote_git/$TEST_PATH"
+  fi
+  docker exec "$CONTAINER" bash -lc \
+    "cd /redmine && RAILS_ENV=test bin/rails test $TEST_PATH"
+else
+  docker exec "$CONTAINER" bash -lc \
+    "cd /redmine && RAILS_ENV=test bin/rails redmine:plugins:test NAME=redmine_remote_git"
+fi
