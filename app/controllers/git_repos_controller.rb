@@ -32,6 +32,7 @@ class GitReposController < ApplicationController
   def update
     @repo = find_repo
     src = @repo.remote_git_source
+    return render_404 if src.nil?
     p = params.require(:remote_git).permit(:auth_type, :credential, :credential_login)
     src.auth_type = p[:auth_type] if p[:auth_type].present?
     src.credential_login = p[:credential_login] if p.key?(:credential_login)
@@ -39,6 +40,8 @@ class GitReposController < ApplicationController
     src.save!
     RedmineRemoteGit::VaultBackup.mirror(@repo, src) if defined?(Vault::Key)
     respond_to { |f| f.api { render action: 'show' } }
+  rescue ActiveRecord::RecordInvalid, RedmineRemoteGit::UrlValidator::InvalidUrl => e
+    render_api_errors(e.message)
   end
 
   def destroy
