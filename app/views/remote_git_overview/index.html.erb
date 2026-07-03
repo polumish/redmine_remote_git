@@ -3,61 +3,62 @@
   <%= javascript_include_tag 'remote_git', plugin: 'redmine_remote_git' %>
 <% end %>
 
-<div class="remote-git-overview">
 <h2><span class="icon-remote-git"></span> <%= l(:label_remote_git_overview) %></h2>
 
-<p class="subtitle">
-  <%= l(:label_remote_git_overview_summary, count: @repositories.size, active: @active_repositories.size) %>
-</p>
-
 <% if @repositories.empty? %>
-  <p class="nodata"><%= l(:label_no_data) %></p>
+  <div class="box"><p class="nodata"><%= l(:label_no_data) %></p></div>
 <% else %>
-  <p>
-    <input type="text" id="remote-git-filter" class="remote-git-filter"
-           placeholder="<%= l(:label_remote_git_filter) %>" autocomplete="off" />
-  </p>
-
-  <%= render partial: 'repo_table',
-             locals: { repos: @active_repositories, table_class: 'remote-git-repos' } %>
-
-  <% if @archived_repositories.any? %>
+  <div class="box remote-git-overview">
+    <h3>
+      <%= l(:label_remote_git_overview) %>
+      <span class="count">(<%= @active_repositories.size %>)</span>
+    </h3>
     <p>
-      <a href="#" id="remote-git-archived-toggle" class="icon icon-collapsed">
-        <%= l(:label_remote_git_archived, count: @archived_repositories.size) %>
-      </a>
+      <input type="text" id="remote-git-filter" class="remote-git-filter"
+             placeholder="<%= l(:label_remote_git_filter) %>" autocomplete="off" />
     </p>
-    <div id="remote-git-archived" style="display:none;">
-      <%= render partial: 'repo_table',
-                 locals: { repos: @archived_repositories, table_class: 'remote-git-archived' } %>
-    </div>
-  <% end %>
+    <%= render partial: 'repo_table',
+               locals: { repos: @active_repositories, table_class: 'remote-git-repos' } %>
 
-  <h3><%= l(:label_remote_git_recent_changes) %></h3>
-  <table class="list remote-git-changes">
-    <thead>
-      <tr>
-        <th><%= l(:label_date) %></th>
-        <th><%= l(:label_repository) %></th>
-        <th><%= l(:field_author) %></th>
-        <th><%= l(:field_comments) %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @recent_changesets.each do |cs| %>
-        <% repo = cs.repository; proj = repo.project %>
+    <% if @archived_repositories.any? %>
+      <p>
+        <a href="#" id="remote-git-archived-toggle" class="icon icon-collapsed">
+          <%= l(:label_remote_git_archived, count: @archived_repositories.size) %>
+        </a>
+      </p>
+      <div id="remote-git-archived" style="display:none;">
+        <%= render partial: 'repo_table',
+                   locals: { repos: @archived_repositories, table_class: 'remote-git-archived' } %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="box remote-git-overview">
+    <h3><%= l(:label_remote_git_recent_changes) %></h3>
+    <table class="list remote-git-changes">
+      <thead>
         <tr>
-          <td><%= format_time(cs.committed_on) %></td>
-          <td>
-            <%= link_to repo.identifier,
-                  url_for(controller: 'repositories', action: 'revision', id: proj,
-                          repository_id: repo.identifier, rev: cs.revision, only_path: true) %>
-          </td>
-          <td><%= cs.committer.to_s.sub(/<.*>/, '').strip %></td>
-          <td><%= textilizable(cs.comments.to_s.truncate(120), project: proj) %></td>
+          <th><%= l(:label_date) %></th>
+          <th><%= l(:label_repository) %></th>
+          <th><%= l(:field_author) %></th>
+          <th><%= l(:field_comments) %></th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% @recent_changesets.each do |cs| %>
+          <% repo = cs.repository; proj = repo.project %>
+          <tr class="<%= cycle('odd', 'even') %>">
+            <td><%= format_time(cs.committed_on) %></td>
+            <td>
+              <%= link_to repo.identifier,
+                    url_for(controller: 'repositories', action: 'revision', id: proj,
+                            repository_id: repo.identifier, rev: cs.revision, only_path: true) %>
+            </td>
+            <td><%= cs.committer.to_s.sub(/<.*>/, '').strip %></td>
+            <td><%= textilizable(cs.comments.to_s.truncate(120), project: proj) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 <% end %>
-</div>

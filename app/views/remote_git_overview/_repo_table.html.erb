@@ -11,7 +11,7 @@
   <tbody>
     <% repos.each do |repo| %>
       <% proj = repo.project; last = @last_dates[repo.id] %>
-      <tr>
+      <tr class="<%= cycle('odd', 'even') %>">
         <td>
           <%= link_to repo.identifier,
                 url_for(controller: 'repositories', action: 'show', id: proj,
