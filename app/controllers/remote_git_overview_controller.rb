@@ -30,6 +30,6 @@ class RemoteGitOverviewController < ApplicationController
   private
 
   def authorize_menu
-    render_403 unless RedmineRemoteGit.menu_visible?(User.current)
+    render_403 unless RedmineRemoteGit::Menu.visible?(User.current)
   end
 end

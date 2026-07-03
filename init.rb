@@ -25,7 +25,7 @@ Redmine::Plugin.register :redmine_remote_git do
   menu :top_menu, :remote_git_overview,
        { controller: 'remote_git_overview', action: 'index' },
        caption: :label_remote_git_menu,
-       if: proc { RedmineRemoteGit.menu_visible?(User.current) },
+       if: proc { RedmineRemoteGit::Menu.visible?(User.current) },
        html: { class: 'remote-git-menu' }
 end
 
