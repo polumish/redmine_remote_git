@@ -1,0 +1,31 @@
+<table class="list <%= table_class %> remote-git-sortable">
+  <thead>
+    <tr>
+      <th data-sort="text"><%= l(:label_repository) %></th>
+      <th data-sort="text"><%= l(:label_project) %></th>
+      <th data-sort="text"><%= l(:field_status) %></th>
+      <th data-sort="num"><%= l(:label_revision_plural) %></th>
+      <th data-sort="num"><%= l(:label_remote_git_last_change) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% repos.each do |repo| %>
+      <% proj = repo.project; last = @last_dates[repo.id] %>
+      <tr>
+        <td>
+          <%= link_to repo.identifier,
+                url_for(controller: 'repositories', action: 'show', id: proj,
+                        repository_id: repo.identifier, only_path: true) %>
+        </td>
+        <td><%= link_to_project proj %></td>
+        <td>
+          <% if proj.active? %><span class="active"><%= l(:label_remote_git_status_active) %></span>
+          <% elsif proj.archived? %><span class="archived"><%= l(:label_remote_git_status_archived) %></span>
+          <% else %><%= l(:label_remote_git_status_closed) %><% end %>
+        </td>
+        <td data-value="<%= @counts[repo.id] || 0 %>"><%= @counts[repo.id] || 0 %></td>
+        <td data-value="<%= last ? last.to_i : 0 %>"><%= last ? format_time(last) : '—'.html_safe %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -4,8 +4,9 @@ require_relative 'lib/redmine_remote_git/url_validator'
 require_relative 'lib/redmine_remote_git/remote_git_service'
 require_relative 'lib/redmine_remote_git/vault_backup'
 require_relative 'lib/redmine_remote_git/hooks'
+require_relative 'lib/redmine_remote_git/menu'
 
-REDMINE_REMOTE_GIT_VERSION = '0.2.0'.freeze
+REDMINE_REMOTE_GIT_VERSION = '0.3.0'.freeze
 
 Redmine::Plugin.register :redmine_remote_git do
   name 'Redmine Remote Git'
@@ -13,12 +14,18 @@ Redmine::Plugin.register :redmine_remote_git do
   description 'Link external git repositories (SSH/HTTPS) to projects via REST API and UI'
   version REDMINE_REMOTE_GIT_VERSION
   requires_redmine version_or_higher: '6.0.0'
-  settings default: { 'mirror_root' => '/var/www/redmine/git_mirrors' }, partial: ''
+  settings default: {
+                 'mirror_root'     => '/var/www/redmine/git_mirrors',
+                 'menu_visibility' => 'everyone',
+                 'menu_group_ids'  => [],
+                 'menu_user_ids'   => []
+               },
+           partial: 'settings/remote_git_settings'
 
   menu :top_menu, :remote_git_overview,
        { controller: 'remote_git_overview', action: 'index' },
        caption: :label_remote_git_menu,
-       if: proc { User.current.logged? },
+       if: proc { RedmineRemoteGit.menu_visible?(User.current) },
        html: { class: 'remote-git-menu' }
 end
 
