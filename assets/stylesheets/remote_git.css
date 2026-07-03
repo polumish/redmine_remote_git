@@ -22,6 +22,20 @@ h2 .icon-remote-git {
 table.remote-git-repos td span.active   { color: #189d0e; }
 table.remote-git-repos td span.archived { color: #999; }
 
+/* Keep the theme's .box card, but override its centered, stretched-to-full-width
+   table: left-align every cell and shrink columns to their content for readability. */
+table.remote-git-repos,
+table.remote-git-changes { width: auto !important; }
+table.remote-git-repos th,  table.remote-git-repos td,
+table.remote-git-changes th, table.remote-git-changes td {
+  text-align: left !important;
+  padding: 3px 18px 3px 6px;
+  white-space: nowrap;
+  vertical-align: top;
+}
+table.remote-git-repos td:last-child,
+table.remote-git-changes td:last-child { white-space: normal; }
+
 input.remote-git-filter { padding: 3px 6px; min-width: 260px; }
 
 th.remote-git-sortable-th { cursor: pointer; user-select: none; }
