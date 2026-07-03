@@ -35,6 +35,8 @@ table.remote-git-changes th, table.remote-git-changes td {
 table.remote-git-repos td:last-child,
 table.remote-git-changes td:last-child { white-space: normal; }
 
+.remote-git-overview { padding-left: 16px; }
+
 input.remote-git-filter { padding: 3px 6px; min-width: 260px; }
 
 th.remote-git-sortable-th { cursor: pointer; user-select: none; }
