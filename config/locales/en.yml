@@ -1,2 +1,10 @@
 en:
   label_remote_git: "Remote Git"
+  label_remote_git_menu: "Git"
+  label_remote_git_overview: "Git repositories"
+  label_remote_git_overview_summary: "%{count} repositories, %{active} in active projects"
+  label_remote_git_last_change: "Last change"
+  label_remote_git_recent_changes: "Recent changes"
+  label_remote_git_status_active: "active"
+  label_remote_git_status_archived: "archived"
+  label_remote_git_status_closed: "closed"

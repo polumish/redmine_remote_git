@@ -1,2 +1,10 @@
 uk:
   label_remote_git: "Віддалений Git"
+  label_remote_git_menu: "Git"
+  label_remote_git_overview: "Git-репозиторії"
+  label_remote_git_overview_summary: "Репозиторіїв: %{count}, у активних проєктах: %{active}"
+  label_remote_git_last_change: "Остання зміна"
+  label_remote_git_recent_changes: "Останні зміни"
+  label_remote_git_status_active: "активний"
+  label_remote_git_status_archived: "архів"
+  label_remote_git_status_closed: "закритий"
